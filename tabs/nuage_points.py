@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 def big_numbers_nuage_points(df_base_magasins, code_principal='0104'):
 
-    st.markdown("<p style='text-align: center;'> Positionnement de la performance énergétique au m² de mon centre E.Leclerc par rapport à la performance des autres magasins de ma SCA et de l\'ensemble des magasins du parc, en 2023. Possibilité également de choisir des magasins spécifiques pour comparaison dans la colonne de gauche. Evaluation par rapport à la moyenne nationale, et calcul des économies potentielles en se basant sur la performance du 20% des magasins les plus performants.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'> Positionnement de la performance énergétique au m² de mon magasin par rapport à la performance des autres magasins de ma région et de l\'ensemble des magasins du parc. Possibilité également de choisir des magasins spécifiques pour comparaison dans la colonne de gauche. Evaluation par rapport à la moyenne nationale, et calcul des économies potentielles en se basant sur la performance du 20% des magasins les plus performants.</p>", unsafe_allow_html=True)
     st.text("")
     df_magasin_principal = df_base_magasins[df_base_magasins['code'] == code_principal]
 
