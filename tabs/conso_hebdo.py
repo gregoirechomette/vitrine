@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 # def plot_conso_hebdo(df_consos_all, df_base, df_stats_dimanche_ouvert, df_stats_dimanche_ferme, code_panonceau=104, magasins_comparatifs=[101,103], color_mean='blue', color_filled='blue'):
 def plot_conso_hebdo(df_consos_all, df_consos_stats, df_carte_identite, code_principal='0104', magasins_comparatifs=['0101','0103'], dimanche_ouvert=0):
 
-    st.markdown("<p style='text-align: center;'> Profil des consommations électriques du magasin sur des semaines moyennes pour chaque mois au long de l\'année 2023. Comparaison aux magasins dans le top 20-80% (zone hachurée), ainsi que la moyenne. Posssibilité de se comparer directement à des magasins spécifiques en les selectionnant dans la colonne de gauche. </p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'> Profil des consommations électriques du site sur des semaines moyennes pour chaque mois au long de l\'année 2023. Comparaison aux sites dans le top 20-80% (zone hachurée), ainsi que la moyenne. Possibilité de se comparer directement à des sites spécifiques en les selectionnant dans la colonne de gauche. </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'> Pour changer de mois, utiliser le curseur ci-dessous: </p>", unsafe_allow_html=True)
 
     # Mois a visualiser
@@ -36,7 +36,7 @@ def plot_conso_hebdo(df_consos_all, df_consos_stats, df_carte_identite, code_pri
     fig.add_scatter(x=df_consos_stats_month['clean_hour'], y=round(df_consos_stats_month['p_w_m2_q80_norm'] ,1), mode='lines', name='Top 20% - 80%', line=dict(color='#D3D3D3', dash='dash'), fill='tonexty', showlegend=True)
     fig.add_scatter(x=df_consos_stats_month['clean_hour'], y=round(df_consos_stats_month['p_w_m2_mean'],1), mode='lines', name='Moyenne globale', line=dict(color='#005abb', dash='dashdot'))
 
-    fig.add_scatter(x=df_consos_all_month['clean_hour'], y=round(pen_factor_mag * df_consos_all_month['p_w_m2'],1), mode='lines', name='Mon magasin', line=dict(color='#005abb', width=2))
+    fig.add_scatter(x=df_consos_all_month['clean_hour'], y=round(pen_factor_mag * df_consos_all_month['p_w_m2'],1), mode='lines', name='Mon site', line=dict(color='#005abb', width=2))
 
     colors_palette = ['#f18e00', '#6cc24a', '#374650', '#fa6e1e', '#7da055']
     for i, magasin in enumerate(magasins_comparatifs):

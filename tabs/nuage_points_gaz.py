@@ -13,15 +13,15 @@ import plotly.graph_objects as go
 
 def big_numbers_nuage_points(df_base_magasins, code_principal='0104'):
 
-    st.markdown("<p style='text-align: center;'> Positionnement de la fraction de gaz dans le mix énergétique de mon magasin par rapport aux autres magasins de ma région et de l\'ensemble des magasins du parc. Possibilité également de choisir des magasins spécifiques pour comparaison dans la colonne de gauche. Evaluation par rapport à la moyenne nationale et le top 20%.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'> Positionnement de la fraction de gaz dans le mix énergétique de mon site par rapport aux autres sites de ma région et de l\'ensemble des sites du parc. Possibilité également de choisir des sites spécifiques pour comparaison dans la colonne de gauche. Evaluation par rapport à la moyenne nationale et le top 20%.</p>", unsafe_allow_html=True)
     st.text("")
     df_magasin_principal = df_base_magasins[df_base_magasins['code'] == code_principal]
 
     col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([2,4,4,4,1])
 
-    col1_1.metric(" Fraction de gaz de mon mix énergie", '\u2001\u2001\u2001\u2001\u2001' + str(round(df_magasin_principal['gaz_fraction'].sum(),1)) + " %")
-    col1_2.metric("\u2001\u2001 Consommation de gaz (2023)", '\u2001\u2001' + str(round(df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " MWh")
-    col1_3.metric("\u2001\u2001 Emmissions liées au gaz (2023)", '\u2001\u2001\u2001' + str(round(0.001 * 227 * df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " tCO2")
+    col1_1.metric(" Fraction de gaz de mon mix énergie", '\u2001\u2001\u2001\u2001\u2001\u2001' + str(round(df_magasin_principal['gaz_fraction'].sum(),1)) + " %")
+    col1_2.metric(" Consommation de gaz (2023)", '\u2001\u2001\u2001' + str(round(df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " MWh")
+    col1_3.metric(" Emmissions liées au gaz (2023)", '\u2001\u2001\u2001' + str(round(0.001 * 227 * df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " tCO2")
 
     return
 
@@ -53,8 +53,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         mode='markers',
         marker=dict(size=7, color='grey', opacity=0.2, line=dict(width=0.5, color='grey')),
         customdata=df_other_magasins[['num_magasin', 'region', 'surface_com_m2', col_y]],
-        name='Autres magasins',
-        hovertemplate="<b>Nom du Compte</b>: %{customdata[0]}<br>" \
+        name='Autres sites',
+        hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>SCA</b>: %{customdata[1]}<br>" \
                       "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
@@ -67,8 +67,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         mode='markers',
         marker=dict(size=8, color='#f18e00', opacity=0.9, line=dict(width=0.5, color='grey')),
         customdata=df_magasins_sca[['num_magasin', 'region', 'surface_com_m2', col_y]],
-        name='Magasins ' + str(region),
-        hovertemplate="<b>Nom du Compte</b>: %{customdata[0]}<br>" \
+        name='Sites en ' + str(region),
+        hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>SCA</b>: %{customdata[1]}<br>" \
                       "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
@@ -81,8 +81,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         mode='markers',
         marker=dict(size=8, color='#6cc24a', opacity=0.9, line=dict(width=1, color='grey')),
         customdata=df_magasins_comparatifs[['num_magasin', 'region', 'surface_com_m2', col_y]],
-        name='Magasins comparatifs',
-        hovertemplate="<b>Nom du Compte</b>: %{customdata[0]}<br>" \
+        name='Sites comparatifs',
+        hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>SCA</b>: %{customdata[1]}<br>" \
                       "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
@@ -95,8 +95,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         mode='markers',
         marker=dict(size=8, color='#005abb', opacity=0.9, line=dict(width=1, color='grey')),
         customdata=df_magasin_principal[['num_magasin', 'region', 'surface_com_m2', col_y]],
-        name='Mon magasin',
-        hovertemplate="<b>Nom du Compte</b>: %{customdata[0]}<br>" \
+        name='Mon site',
+        hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>SCA</b>: %{customdata[1]}<br>" \
                       "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
@@ -104,7 +104,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
     
     # Update layout
     fig.update_layout(
-        xaxis=dict(showgrid=True,gridcolor='LightPink',  gridwidth=1, title=dict(text='Surface commerciale [m²]', font=dict(size=16))),
+        xaxis=dict(showgrid=True,gridcolor='LightPink',  gridwidth=1, title=dict(text='Surface [m²] (ou équivalent)', font=dict(size=16))),
         yaxis=dict(showgrid=True,gridcolor='LightGray', gridwidth=1, title=dict(text='Fraction de gaz dans le mix énergétique [%]', font=dict(size=16))),
         height=550,
         margin=dict(l=20, r=20, t=0, b=100),

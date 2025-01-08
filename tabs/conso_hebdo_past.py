@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 def plot_conso_hebdo(df_consos_all, df_consos_stats, df_carte_identite, code_principal='0104', magasins_comparatifs=['0101','0103'], dimanche_ouvert=0):
 
     st.write(" ")
-    st.markdown("<p style='text-align: center;'> Profil des consommations électriques du magasin sur des semaines moyennes. Le magasin peut se comparer à lui même dans le passé en selectionnant des mois au choix. </p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'> Profil des consommations électriques du site sur des semaines moyennes. Le site peut se comparer à lui même dans le passé en selectionnant des mois au choix. </p>", unsafe_allow_html=True)
     st.write(" ")
 
     options_mois = ['Avril 2022', 'Mai 2022', 

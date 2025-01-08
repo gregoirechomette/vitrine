@@ -21,7 +21,7 @@ def resume(df_base, magasin_principal, magasins_comparatifs):
 
 
     with col1:
-        st.markdown("<h4 style='text-align: center;'>Mes données magasin</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='text-align: center;'>Mon site</h4>", unsafe_allow_html=True)
         st.text("")
         st.write('Nom du manager:', df_base_magasin['manager'].values[0])
         st.write('Région:', df_base_magasin['region'].values[0])
@@ -31,7 +31,7 @@ def resume(df_base, magasin_principal, magasins_comparatifs):
         st.write('Autoconsommation photovoltaique:', str(df_base_magasin['pv'].values[0]))
 
         # Surface commerciale
-        st.write('Surface commerciale:', str(int(df_base_magasin['surface_com_m2'].values[0])), 'm²')
+        st.write('Surface (ou équivalent):', str(int(df_base_magasin['surface_com_m2'].values[0])), 'm²')
 
         st.write('Conso électrique (2023):', str(int(df_base_magasin['conso_elec_2023_mwh'].values[0])), 'MWh')
         st.write('Conso de gaz (2023):', str(int(df_base_magasin['conso_gaz_2023_mwh'].values[0])), 'MWh')
