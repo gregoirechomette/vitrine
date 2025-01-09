@@ -55,8 +55,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         customdata=df_other_magasins[['num_magasin', 'region', 'surface_com_m2', col_y]],
         name='Autres sites',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
-                      "<b>SCA</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Région</b>: %{customdata[1]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
     ))
     
@@ -69,8 +69,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         customdata=df_magasins_sca[['num_magasin', 'region', 'surface_com_m2', col_y]],
         name='Sites en ' + str(region),
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
-                      "<b>SCA</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Région</b>: %{customdata[1]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
     ))
 
@@ -83,8 +83,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         customdata=df_magasins_comparatifs[['num_magasin', 'region', 'surface_com_m2', col_y]],
         name='Sites comparatifs',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
-                      "<b>SCA</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Région</b>: %{customdata[1]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
     ))
     
@@ -97,8 +97,8 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
         customdata=df_magasin_principal[['num_magasin', 'region', 'surface_com_m2', col_y]],
         name='Mon site',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
-                      "<b>SCA</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Région</b>: %{customdata[1]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Fraction de gaz dans le mix énergétique (%)</b>: %{customdata[3]}<br>" 
     ))
     

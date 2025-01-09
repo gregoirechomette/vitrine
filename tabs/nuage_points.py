@@ -80,7 +80,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m
         name='Autres sites',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>Region</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Conso annuelle normalisée corrigée [MWh/m²]</b>: %{customdata[3]}<br>" \
                       "<b>Potentielles économies [MWh]</b>: %{customdata[4]}<br>"
     ))
@@ -95,7 +95,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m
         name='Sites en ' + str(region),
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>Region</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Conso électrique annuelle normalisée corrigée [MWh/m²]</b>: %{customdata[3]}<br>" \
                       "<b>Potentielles économies [MWh]</b>: %{customdata[4]}<br>"
     ))
@@ -110,7 +110,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m
         name='Sites comparatifs',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>Region</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Conso électrique annuelle normalisée corrigée [MWh/m²]</b>: %{customdata[3]}<br>" \
                       "<b>Potentielles économies [MWh]</b>: %{customdata[4]}<br>"
     ))
@@ -125,7 +125,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m
         name='Mon site',
         hovertemplate="<b>Numéro du site</b>: %{customdata[0]}<br>" \
                       "<b>Region</b>: %{customdata[1]}<br>" \
-                      "<b>Surface commerciale [m²]</b>: %{customdata[2]}<br>" \
+                      "<b>Surface du site [m²]</b>: %{customdata[2]}<br>" \
                       "<b>Conso électrique annuelle normalisée corrigée [MWh/m²]</b>: %{customdata[3]}<br>" \
                       "<b>Potentielles économies [MWh]</b>: %{customdata[4]}<br>"
     ))
@@ -173,7 +173,7 @@ def expander_nuage_points(euros_mwh, tCO2_gwh, mode='elec'):
 
     else:
         with st.expander("Hypothèses"):
-            st.write('[1] En suppposant que le magasin arrive à baisser sa consommation au niveau du top 20%, et avec des hypothèses d\'un prix de ' + str(euros_mwh) + '€/MWh électrique, 101 €/MWh de gaz, un facteur d\'émission de '  + str(tCO2_gwh) + ' tCO2/GWh électrique et 227 tCO2/GWh pour le gaz. Pour arriver au niveau du top 20%, on suppose que le magasin baisse sa consommation d\'éléctricité et de gaz dans les mêmes proportions.')
-            st.write('[2] Les consommations ont été corrigées pour prendre trois facteurs en considération: 1) la surface commerciale: pour chaque 1000 m² supplémentaire de surface commerciale, la consommation énergétique diminue de 0.006 [MWh/m²]; 2) le climat: pour chaque degré de température extérieure moyenne en plus, la consommation énergétique augmente de 0.006 [MWh/m²]; 3) l\'ouverture le dimanche: pour les magasins ouverts le dimanche, la consommation énergétique augmente en moyenne de 3%.')
+            st.write('[1] En suppposant que le site arrive à baisser sa consommation au niveau du top 20%, et avec des hypothèses d\'un prix de ' + str(euros_mwh) + '€/MWh électrique, 101 €/MWh de gaz, un facteur d\'émission de '  + str(tCO2_gwh) + ' tCO2/GWh électrique et 227 tCO2/GWh pour le gaz. Pour arriver au niveau du top 20%, on suppose que le site baisse sa consommation d\'éléctricité et de gaz dans les mêmes proportions.')
+            st.write('[2] Les consommations ont été corrigées pour prendre trois facteurs en considération: 1) la surface du site: pour chaque 1000 m² supplémentaire de surface, la consommation énergétique diminue de 0.006 [MWh/m²]; 2) le climat: pour chaque degré de température extérieure moyenne en plus, la consommation énergétique augmente de 0.006 [MWh/m²]; 3) l\'ouverture le dimanche: pour les sites ouverts le dimanche, la consommation énergétique augmente en moyenne de 3%.')
 
     return

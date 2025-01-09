@@ -62,15 +62,18 @@ def plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal='010
     energie_autoconsommee_mwh = 1e-6 * df_magasin_principal['autoconso_w'].sum() * (52/12)
 
     # Create metrics for the selected power value
-    col0, col1, col2, col3, col4 = st.columns([3,4,4,4,1])
+    col0, col1, col2, col3, col4, col5 = st.columns([3,4,4,4,4,1])
     with col1:
-        st.metric("Taux d'autoconsommation", str(round(taux_autoconso,1)) + " %")
+        st.metric("Puissance installée", str(round(selected_power_value,2)) + " MWc")
     with col2:
-        st.metric("Taux de couverture", str(round(taux_couverture,1)) + " %")
+        st.metric("Energie autoconsommée", str(int(energie_autoconsommee_mwh)) + " MWh")
     with col3:
-        st.metric("Energie autoconsommée", str(round(energie_autoconsommee_mwh,1)) + " MWh")
+        st.metric("Taux d'autoconsommation", str(round(taux_autoconso,1)) + " %")
+    with col4:
+        st.metric("Taux de couverture", str(round(taux_couverture,1)) + " %")
+    
 
-    # Plot février 2023
+    plot_year_pv(df_magasin_principal)
     plot_week_pv(df_magasin_principal[df_magasin_principal['clean_month'] == 'Février 2023'], name='Semaine représentative en hiver')
     plot_week_pv(df_magasin_principal[df_magasin_principal['clean_month'] == 'Juillet 2023'], name='Semaine représentative en été')
 
@@ -84,7 +87,7 @@ def plot_week_pv(df_magasin_principal_month, name= 'Mois sélectionné'):
     # Create a bar plot (stacked vertically) for a week in Fevrier 2023
     custom_colors = {"autoconso_w": px.colors.qualitative.Plotly[9], "soutirage_w": px.colors.qualitative.Set1[0],  "surplus_w": px.colors.qualitative.Set1[1] }
 
-    fig = px.bar(df_magasin_principal_month, x='clean_hour', y=['autoconso_w', 'soutirage_w', 'surplus_w'], title='Semaine moyenne en Février 2023', labels={'value': 'Energie [W]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
+    fig = px.bar(df_magasin_principal_month, x='clean_hour', y=['autoconso_w', 'soutirage_w', 'surplus_w'], title='Semaine moyenne en Février 2023', labels={'value': 'Energie [Wh]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
 
     # Update the layout
     fig.update_layout(title=name, title_x=0.4, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
@@ -96,8 +99,36 @@ def plot_week_pv(df_magasin_principal_month, name= 'Mois sélectionné'):
                       tickvals=['Lundi 12h', 'Mardi 12h', 'Mercredi 12h', 'Jeudi 12h', 'Vendredi 12h', 'Samedi 12h', 'Dimanche 12h'], side='bottom')
 
     # Change the name of the labels in the legend
-    fig.for_each_trace(lambda t: t.update(name=t.name.replace("_w", " [W]")))
+    fig.for_each_trace(lambda t: t.update(name=t.name.replace("_w", " [Wh]")))
 
 
     st.plotly_chart(fig)
+
+    return
+
+# Now I want a similar function but that plots the twelve months of the year, with a stacked bar plot for each month and the same color
+
+def plot_year_pv(df_magasin_principal):
+
+    # Create a bar plot (stacked vertically) for a week in Fevrier 2023
+    custom_colors = {"autoconso_w": px.colors.qualitative.Plotly[9], "soutirage_w": px.colors.qualitative.Set1[0],  "surplus_w": px.colors.qualitative.Set1[1] }
+
+    fig = px.bar(df_magasin_principal, x='clean_month', y=['autoconso_w', 'soutirage_w', 'surplus_w'], title='Année 2023', labels={'value': 'Energie [Wh]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
+
+    # Update the layout
+    fig.update_layout(title='Visualisation de l\'autoconsommation sur une année', title_x=0.35, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
+                      legend=dict(orientation='h', yanchor="top", y=1.1, xanchor="right", x=0.99), )
+
+    # Change xlabel
+    fig.update_xaxes(title_text=" ", title_font=dict(size=12), showticklabels=True, tickfont=dict(size=16), 
+                      ticktext=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], 
+                      tickvals=['Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023', 'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023', 'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'], side='bottom')
+
+    # Change the name of the labels in the legend
+    fig.for_each_trace(lambda t: t.update(name=t.name.replace("_w", " [Wh]")))
+
+
+    st.plotly_chart(fig)
+
+    return
 
