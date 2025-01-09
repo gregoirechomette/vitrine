@@ -110,10 +110,23 @@ def plot_week_pv(df_magasin_principal_month, name= 'Mois sélectionné'):
 
 def plot_year_pv(df_magasin_principal):
 
+    # Rescale the values to have the yearly values
+    df_magasin_principal_rescaled = df_magasin_principal.copy()
+    df_magasin_principal_rescaled['autoconso_w'] = (52/12) * df_magasin_principal['autoconso_w']
+    df_magasin_principal_rescaled['soutirage_w'] = (52/12) * df_magasin_principal['soutirage_w']
+    df_magasin_principal_rescaled['surplus_w'] = (52/12) * df_magasin_principal['surplus_w']
+
+    # Also group by month
+    df_magasin_principal_rescaled = df_magasin_principal_rescaled.groupby(by=['clean_month'], as_index=False).agg({'autoconso_w': 'sum', 'soutirage_w': 'sum', 'surplus_w': 'sum'})
+    # Order by month
+    df_magasin_principal_rescaled['clean_month'] = pd.Categorical(df_magasin_principal_rescaled['clean_month'], ['Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023', 'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023', 'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'])
+    df_magasin_principal_rescaled.sort_values('clean_month', inplace=True)
+    
+
     # Create a bar plot (stacked vertically) for a week in Fevrier 2023
     custom_colors = {"autoconso_w": px.colors.qualitative.Plotly[9], "soutirage_w": px.colors.qualitative.Set1[0],  "surplus_w": px.colors.qualitative.Set1[1] }
 
-    fig = px.bar(df_magasin_principal, x='clean_month', y=['autoconso_w', 'soutirage_w', 'surplus_w'], title='Année 2023', labels={'value': 'Energie [Wh]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
+    fig = px.bar(df_magasin_principal_rescaled, x='clean_month', y=['autoconso_w', 'soutirage_w', 'surplus_w'], title='Année 2023', labels={'value': 'Energie [Wh]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
 
     # Update the layout
     fig.update_layout(title='Visualisation de l\'autoconsommation sur une année', title_x=0.35, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
@@ -124,6 +137,8 @@ def plot_year_pv(df_magasin_principal):
                       ticktext=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], 
                       tickvals=['Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023', 'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023', 'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'], side='bottom')
 
+    
+    
     # Change the name of the labels in the legend
     fig.for_each_trace(lambda t: t.update(name=t.name.replace("_w", " [Wh]")))
 
