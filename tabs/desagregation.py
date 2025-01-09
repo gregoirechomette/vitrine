@@ -59,12 +59,12 @@ def fictitious_desagregation(df_consos_magasin, season='summer'):
     if season == 'summer':
 
         df_consos_magasin['hour'] = df_consos_magasin['clean_hour'].str.split(' ').str[1].str[:-1].astype(int)
-        df_consos_magasin['groupe_froid_negatif'] = 0
-        df_consos_magasin['groupe_froid_positif'] = 0
-        df_consos_magasin['eclairage'] = 0
-        df_consos_magasin['chauffage'] = 0
-        df_consos_magasin['climatisation'] = 0
-        df_consos_magasin['autres'] = 0
+        df_consos_magasin['groupe_froid_negatif'] = 0.0
+        df_consos_magasin['groupe_froid_positif'] = 0.0
+        df_consos_magasin['eclairage'] = 0.0
+        df_consos_magasin['chauffage'] = 0.0
+        df_consos_magasin['climatisation'] = 0.0
+        df_consos_magasin['autres'] = 0.0
 
         # In summer, ther is no chauffage, but there is climatisation. Groupes froids are always on, and represent the most important part of the consumption. Climatisation is only during the day, particularly high in the afternoon.
         df_consos_magasin.loc[(df_consos_magasin['hour'] >= 2) & (df_consos_magasin['hour'] <= 20), 'groupe_froid_negatif'] = 0.3 * df_consos_magasin['p_w_m2']
@@ -81,12 +81,12 @@ def fictitious_desagregation(df_consos_magasin, season='summer'):
     elif season == 'winter':
 
         df_consos_magasin['hour'] = df_consos_magasin['clean_hour'].str.split(' ').str[1].str[:-1].astype(int)
-        df_consos_magasin['groupe_froid_negatif'] = 0
-        df_consos_magasin['groupe_froid_positif'] = 0
-        df_consos_magasin['eclairage'] = 0
-        df_consos_magasin['chauffage'] = 0
-        df_consos_magasin['climatisation'] = 0
-        df_consos_magasin['autres'] = 0
+        df_consos_magasin['groupe_froid_negatif'] = 0.0
+        df_consos_magasin['groupe_froid_positif'] = 0.0
+        df_consos_magasin['eclairage'] = 0.0
+        df_consos_magasin['chauffage'] = 0.0
+        df_consos_magasin['climatisation'] = 0.0
+        df_consos_magasin['autres'] = 0.0
 
         # Split the consumption 'p_w_m2' into the different categories with some plausible values. In winter, there is no climatisation. At night (bw 21hand 4h), there is no eclairage. Chauffage is mostly during the day, a little bit at night. Groupes froids are always on, and represent the most important part of the consumption.
         df_consos_magasin.loc[(df_consos_magasin['hour'] >= 3) & (df_consos_magasin['hour'] <= 20), 'groupe_froid_negatif'] = 0.3 * df_consos_magasin['p_w_m2']
