@@ -9,7 +9,8 @@ from streamlit_folium import st_folium
 
 import sys
 sys.path.append('./tabs')
-import resume, nuage_points, nuage_points_gaz, conso_hebdo, conso_hebdo_past, radar, desagregation, pv, prix_electricite, stockage
+# import resume, nuage_points, nuage_points_gaz, conso_hebdo, conso_hebdo_past, radar, desagregation, pv, prix_electricite, stockage
+import resume, nuage_points, nuage_points_gaz, conso_hebdo, conso_hebdo_past, radar, desagregation, pv, prix_electricite
 import data_loading
 from data_loading import load_consos_data, load_consos_stats
 import hmac
