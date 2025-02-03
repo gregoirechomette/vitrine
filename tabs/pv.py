@@ -36,14 +36,14 @@ def plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal='010
     df_consos_all = df_consos_all[df_consos_all['year'] == '2023']
 
     # Return selected_power_value
-    df_magasin_principal = df_consos_all[df_consos_all['code'] == code_principal]
-    df_base_magasin = df_carte_identite[df_carte_identite['code'] == code_principal]
+    df_magasin_principal = df_consos_all[df_consos_all['code'] == code_principal].copy()
+    df_base_magasin = df_carte_identite[df_carte_identite['code'] == code_principal].copy()
 
     # Create a new colum 'p_w' by multiplying 'p_w_m2' by the selected surface
     df_magasin_principal['p_w'] = df_magasin_principal['p_w_m2'] * df_base_magasin['surface_com_m2'].values[0]
 
     # Merge the two dataframes
-    df_magasin_principal = df_magasin_principal.merge(df_solar, on=['clean_month', 'clean_hour'], how='left')\
+    df_magasin_principal = df_magasin_principal.merge(df_solar, on=['clean_month', 'clean_hour'], how='left')
     
     # Rename the consumption column
     df_magasin_principal.rename(columns={'p_w': 'conso_w'}, inplace=True)
