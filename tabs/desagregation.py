@@ -33,10 +33,10 @@ def desagregation_cdc(df_consos_all, df_consos_stats, df_carte_identite, code_pr
     fig_ete = px.bar(df_consos_magasin_ete, x='clean_hour', y=['groupe_froid_negatif', 'groupe_froid_positif', 'chauffage', 'climatisation', 'eclairage', 'autres'], title='Juillet 2023', labels={'value': 'Puissance [W/m²]', 'variable': ' '}, color_discrete_map=custom_colors, barmode='relative')
 
     # Update the layout
-    fig_hiver.update_layout(title='Désagrégation en hiver', title_x=0.4, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
+    fig_hiver.update_layout(title=' ', title_x=0.4, height=550, showlegend=True, margin=dict(l=20, r=20, t=10, b=20),
                       legend=dict(orientation='h', yanchor="top", y=1.1, xanchor="right", x=0.99), )
 
-    fig_ete.update_layout(title='Désagrégation en ete', title_x=0.4, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
+    fig_ete.update_layout(title=' ', title_x=0.4, height=550, showlegend=True, margin=dict(l=20, r=20, t=10, b=20),
                       legend=dict(orientation='h', yanchor="top", y=1.1, xanchor="right", x=0.99), )
 
     # Change xlabel
@@ -48,7 +48,9 @@ def desagregation_cdc(df_consos_all, df_consos_stats, df_carte_identite, code_pr
                         ticktext=['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], 
                         tickvals=['Lundi 12h', 'Mardi 12h', 'Mercredi 12h', 'Jeudi 12h', 'Vendredi 12h', 'Samedi 12h', 'Dimanche 12h'], side='bottom')
 
+    st.markdown("<h5 style='text-align: center;'>Désagrégation en hiver</h5>", unsafe_allow_html=True)
     st.plotly_chart(fig_hiver)
+    st.markdown("<h5 style='text-align: center;'>Désagrégation en été</h5>", unsafe_allow_html=True)
     st.plotly_chart(fig_ete)
 
 
