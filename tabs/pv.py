@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 def plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal='0104'):
 
-    st.markdown("<h4 style='text-align: center;'>Aperçu des bénéfices d'une centrale solaire</h4>", unsafe_allow_html=True)
+    st.markdown("<h5 style='text-align: center;'>Aperçu des bénéfices d'une centrale solaire</h5>", unsafe_allow_html=True)
     st.text("")
     col1, col2 = st.columns([1,6])
 
@@ -61,16 +61,41 @@ def plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal='010
     taux_couverture = 100 * df_magasin_principal['prod_w'].sum() / df_magasin_principal['conso_w'].sum()
     energie_autoconsommee_mwh = 1e-6 * df_magasin_principal['autoconso_w'].sum() * (52/12)
 
+
     # Create metrics for the selected power value
-    col0, col1, col2, col3, col4, col5 = st.columns([3,4,4,4,4,1])
+    col0, col1, col2, col3, col4 = st.columns([3,4,4,4,4])
+    
     with col1:
-        st.metric("Puissance installée", str(round(selected_power_value,2)) + " MWc")
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Puissance installée 🌞 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{selected_power_value} MWc </span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
     with col2:
-        st.metric("Energie autoconsommée", str(int(energie_autoconsommee_mwh)) + " MWh")
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Autoconsommation 🔌 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{int(energie_autoconsommee_mwh)} MWh</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
     with col3:
-        st.metric("Taux d'autoconsommation", str(round(taux_autoconso,1)) + " %")
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Taux d'autoconsommation 🔍 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(taux_autoconso,1)} %</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
     with col4:
-        st.metric("Taux de couverture", str(round(taux_couverture,1)) + " %")
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Taux de couverture 🛡️ <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(taux_couverture,1)} %</span><br>
+                </div>
+                """, unsafe_allow_html=True)
     
 
     plot_year_pv(df_magasin_principal)
