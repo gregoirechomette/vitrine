@@ -19,10 +19,38 @@ def big_numbers_nuage_points(df_base_magasins, code_principal='0104'):
 
     col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([2,4,4,4,1])
 
-    col1_1.metric(" Fraction de gaz de mon mix énergie", '\u2001\u2001\u2001\u2001\u2001\u2001' + str(round(df_magasin_principal['gaz_fraction'].sum(),1)) + " %")
-    col1_2.metric(" Consommation de gaz (2023)", '\u2001\u2001\u2001' + str(round(df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " MWh")
-    col1_3.metric(" Emmissions liées au gaz (2023)", '\u2001\u2001\u2001' + str(round(0.001 * 227 * df_magasin_principal['conso_gaz_2023_mwh'].sum())) + " tCO2")
+    # Retrieve the important values
+    fraction_gaz = round(df_magasin_principal['gaz_fraction'].sum())
+    conso_gaz = round(df_magasin_principal['conso_gaz_2023_mwh'].sum())
+    emmissions_gaz = round(0.001 * 227 * df_magasin_principal['conso_gaz_2023_mwh'].sum())
+    
+    # Show some indicators
+    with col1_1:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Fraction de gaz (🛢️ vs ⚡)  <br>
+                    <span style="font-size: 22px; font-weight: bold;">{fraction_gaz} %</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_2:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Consommation de gaz 🔥  <br>
+                    <span style="font-size: 22px; font-weight: bold;">{conso_gaz} MWh</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_3:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Émissions liées au gaz 🌍  <br>
+                    <span style="font-size: 22px; font-weight: bold;">{emmissions_gaz} tCO2</span><br>
+                </div>
+                """, unsafe_allow_html=True)
 
+    st.text("")
+    
     return
 
 def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_comparatifs=[101,103]):
@@ -39,7 +67,7 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, code_principal=104, codes_c
     fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].mean(), line_dash='dash', line_color='grey',
                   annotation_text=f'Moyenne: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].mean(), 1)} %', annotation_position='top right')
     
-    # Separate points based on 'Code panonceau' column
+    # Slice dataframe based on different subsets
     region = df_base_magasins[df_base_magasins['code'] == code_principal]['region'].values[0]
     df_magasin_principal = df_base_magasins[df_base_magasins['code'] == code_principal]
     df_magasins_comparatifs = df_base_magasins[df_base_magasins['code'].isin(codes_comparatifs)]

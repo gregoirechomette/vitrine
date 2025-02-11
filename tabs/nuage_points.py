@@ -20,9 +20,38 @@ def big_numbers_nuage_points(df_base_magasins, code_principal='0104'):
     
     col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([2,4,4,4,1])
  
-    col1_1.metric("\u2001\u2001Economies énergétiques potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_mwh_energie'].sum())) + " MWh/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
-    col1_2.metric("Economies financières potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_keuros_energie'].sum(),2)) + " k€/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
-    col1_3.metric("\u2001\u2001\u2001\u2001Economies CO2 potentielles [1]", '\u2001' + str(round(df_magasin_principal['potentiel_economies_tC02_energie'].sum(),1 )) + " tCO2/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
+    # Retrieve the important values
+    potentiel_economies_mwh = round(df_magasin_principal['potentiel_economies_mwh_energie'].sum())
+    potentiel_economies_keuros = round(df_magasin_principal['potentiel_economies_keuros_energie'].sum())
+    potentiel_economies_tCO2 = round(df_magasin_principal['potentiel_economies_tC02_energie'].sum())
+    percent_value = round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())
+    
+    with col1_1:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Économies potentielles ⚡ [1] <br>
+                    <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_mwh} MWh/an</span><br>
+                    <span style="font-size: 14px; color: gray;">{percent_value} %</span>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_2:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Économies potentielles 💰 [1] <br>
+                    <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_keuros} k€/an</span><br>
+                    <span style="font-size: 14px; color: gray;">{percent_value} %</span>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_3:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Économies potentielles 🌍 [1] <br>
+                    <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_tCO2} tCO2/an</span><br>
+                    <span style="font-size: 14px; color: gray;">{percent_value} %</span>
+                </div>
+                """, unsafe_allow_html=True)
     
     st.text("")
 
