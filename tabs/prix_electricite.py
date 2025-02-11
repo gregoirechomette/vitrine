@@ -86,7 +86,7 @@ def plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal='0
 
 
 
-    # NOW ANALYSZ MONTH BY MONTH
+    # NOW ANALYZE MONTH BY MONTH
 
     df_prix_elec.rename(columns={'month': 'clean_month'}, inplace=True)
     df_consos_prix_merged_all_months = df_consos[df_consos['code'] == code_principal].merge(df_prix_elec, on=['clean_hour', 'clean_month'], how='left')
@@ -145,39 +145,59 @@ def plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal='0
     fig.update_yaxes(range=[0, 1.1 * max(df_prix_par_mois['price_market_eur'].max(), df_prix_par_mois['price_hp_hc_eur'].max())])
 
     st.plotly_chart(fig)
-
+    
+    # FINALLY, HEAT MAPS
+    
+    # Split 'clean_hour' into 'weekday' and 'hour'
+    df_consos_prix_merged_all_months['weekday'] = df_consos_prix_merged_all_months['clean_hour'].str.split(' ').str[0]
     df_consos_prix_merged_all_months['hour'] = df_consos_prix_merged_all_months['clean_hour'].str.split(' ').str[1]
     df_consos_prix_merged_all_months['hour'] = df_consos_prix_merged_all_months['hour'].str[:-1].astype(int)
 
+    # Calculate percentage difference
     df_consos_prix_merged_all_months['percentage_higher_market'] = 100 * (df_consos_prix_merged_all_months['price_market_eur'] - df_consos_prix_merged_all_months['price_hp_hc_eur']) / df_consos_prix_merged_all_months['price_hp_hc_eur']
-    df_heatmap = df_consos_prix_merged_all_months.groupby(['clean_month', 'hour']).agg({'percentage_higher_market': 'mean'}).reset_index()
-    df_heatmap['percentage_higher_market'] = df_heatmap['percentage_higher_market'].round(1)
 
-    df_heatmap = df_heatmap.pivot(index='clean_month', columns='hour', values='percentage_higher_market')
-    df_heatmap = df_heatmap.reset_index()
-    
+    # Separate data for weekdays and weekends
+    weekdays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
+    df_weekdays = df_consos_prix_merged_all_months[df_consos_prix_merged_all_months['weekday'].isin(weekdays)]
+    df_weekends = df_consos_prix_merged_all_months[~df_consos_prix_merged_all_months['weekday'].isin(weekdays)]
 
-    df_heatmap['clean_month'] = pd.Categorical(
-        df_heatmap['clean_month'],
-        categories=[
-            'Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023',
-            'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023',
-            'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'],ordered=True)
+    # Function to create heatmap
+    def create_heatmap(df, title_suffix):
+        df_heatmap = df.groupby(['clean_month', 'hour']).agg({'percentage_higher_market': 'mean'}).reset_index()
+        df_heatmap['percentage_higher_market'] = df_heatmap['percentage_higher_market'].round(1)
+        df_heatmap = df_heatmap.pivot(index='clean_month', columns='hour', values='percentage_higher_market')
+        df_heatmap = df_heatmap.reset_index()
 
-    df_heatmap.sort_values('clean_month', inplace=True)
+        df_heatmap['clean_month'] = pd.Categorical(
+            df_heatmap['clean_month'],
+            categories=[
+                'Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023',
+                'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023',
+                'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'], ordered=True)
 
-    # Define clean_month as index
-    df_heatmap.set_index('clean_month', inplace=True)
+        df_heatmap.sort_values('clean_month', inplace=True)
+        df_heatmap.set_index('clean_month', inplace=True)
 
-    fig = px.imshow(df_heatmap, color_continuous_scale='RdBu_r', title='Pourcentage de différence entre le prix du marché et le prix HP/HC', labels=dict(x='Heure', y='Mois', color='Pourcentage de différence'), height=600, zmin=-100, zmax=100)
+        fig = px.imshow(df_heatmap, color_continuous_scale='RdBu_r',
+                        title=f'Pourcentage de différence entre le prix du marché et le prix HP/HC ({title_suffix})',
+                        labels=dict(x='Heure', y='Mois', color='Pourcentage de différence'),
+                        height=300, zmin=-100, zmax=100)
 
-    fig.update_layout(title={'text': "Meilleurs moments pour acheter sur le marché EPEX (en bleu)", 'x': 0.5, 'xanchor': 'center', 'yanchor': 'top'},
-                        margin=dict(l=0, r=0, t=80, b=0),
+        fig.update_layout(title={'x': 0.5, 'xanchor': 'center', 'yanchor': 'top'},
+                        margin=dict(l=0, r=0, t=40, b=0),
                         xaxis_title='Heure',
                         yaxis_title=' ',
-                        legend=dict(orientation='h', yanchor="top", y=1.1, xanchor="right", x=0.99))
+                        legend=dict(orientation='h', yanchor="top", y=1.1, xanchor="right", x=0.99), height=400)
 
-    st.plotly_chart(fig)
+        return fig
+
+    # Create heatmaps
+    fig_weekdays = create_heatmap(df_weekdays, 'Semaine')
+    fig_weekends = create_heatmap(df_weekends, 'Week-end')
+
+    # Plot heatmaps
+    st.plotly_chart(fig_weekdays)
+    st.plotly_chart(fig_weekends)
 
 
     return
