@@ -20,7 +20,7 @@ def plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal='0
     options=['Janvier 2023', 'Février 2023', 'Mars 2023', 'Avril 2023', 'Mai 2023', 'Juin 2023', 'Juillet 2023', 'Août 2023', 'Septembre 2023', 'Octobre 2023', 'Novembre 2023', 'Décembre 2023'], key='mois_prix_elec')
 
     # Slice the dataframe to keep only the selected month
-    df_prix_elec_month = df_prix_elec[df_prix_elec['month'] == mois]
+    df_prix_elec_month = df_prix_elec[df_prix_elec['month'] == mois].copy()
     df_prix_elec_month.rename(columns={'month': 'clean_month'}, inplace=True)
 
     # Slide the conso dataframe to get only the month and the code_principal
