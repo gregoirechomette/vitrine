@@ -17,42 +17,23 @@ def big_numbers_nuage_points(df_base_magasins, code_principal='0104'):
     st.text("")
     df_magasin_principal = df_base_magasins[df_base_magasins['code'] == code_principal]
 
-    # col_0, col_1, col_2 = st.columns([2, 8, 30])
-
-    # with col_1:
-    #     mode = st.radio("Choisir le type de comparaison", ('Éléctricité + gaz', 'Éléctricité uniquement'), label_visibility="visible")
-
-    # if mode == 'Éléctricité uniquement':
-    #     mode_output = 'elec'
-    # else:
-    #     mode_output = 'energie'
-
-    mode_output = 'energie'
-
-    # with col_2:
     
     col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([2,4,4,4,1])
-    if mode_output == 'elec':
-        col1_1.metric("\u2001\u2001Economies éléctriques potentielles [1]", '\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_mwh_elec'].sum())) + " MWh/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_elec'].sum() / df_magasin_principal['conso_elec_2023_mwh'].sum())) + " %")
-        col1_2.metric("Economies financières potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_keuros_elec'].sum(),2)) + " k€/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_elec'].sum() / df_magasin_principal['conso_elec_2023_mwh'].sum())) + " %")
-        col1_3.metric("\u2001\u2001\u2001\u2001Economies CO2 potentielles [1]", '\u2001' + str(round(df_magasin_principal['potentiel_economies_tC02_elec'].sum(),1 )) + " tCO2/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_elec'].sum() / df_magasin_principal['conso_elec_2023_mwh'].sum())) + " %")
-    else:   
-        col1_1.metric("\u2001\u2001Economies énergétiques potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_mwh_energie'].sum())) + " MWh/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
-        col1_2.metric("Economies financières potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_keuros_energie'].sum(),2)) + " k€/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
-        col1_3.metric("\u2001\u2001\u2001\u2001Economies CO2 potentielles [1]", '\u2001' + str(round(df_magasin_principal['potentiel_economies_tC02_energie'].sum(),1 )) + " tCO2/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
+ 
+    col1_1.metric("\u2001\u2001Economies énergétiques potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_mwh_energie'].sum())) + " MWh/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
+    col1_2.metric("Economies financières potentielles [1]", '\u2001\u2001\u2001' + str(round(df_magasin_principal['potentiel_economies_keuros_energie'].sum(),2)) + " k€/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
+    col1_3.metric("\u2001\u2001\u2001\u2001Economies CO2 potentielles [1]", '\u2001' + str(round(df_magasin_principal['potentiel_economies_tC02_energie'].sum(),1 )) + " tCO2/an", str(round(-100 * df_magasin_principal['potentiel_economies_mwh_energie'].sum() / df_magasin_principal['conso_energie_2023_mwh'].sum())) + " %")
+    
     st.text("")
 
 
-    return mode_output
+    return
 
-def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m2_corrigee', code_principal=104, codes_comparatifs=[101,103], mode='elec'):
+def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m2_corrigee', code_principal=104, codes_comparatifs=[101,103]):
 
-    if mode == 'elec':
-        col_y = 'conso_elec_2023_mwh_par_m2_corrigee'
-        col_y_economies = 'potentiel_economies_mwh_elec'
-    else:
-        col_y = 'conso_energie_2023_mwh_par_m2_corrigee'
-        col_y_economies = 'potentiel_economies_mwh_energie'
+    # Define the columns of interest
+    col_y = 'conso_energie_2023_mwh_par_m2_corrigee'
+    col_y_economies = 'potentiel_economies_mwh_energie'
 
     # Create an empty figure
     fig = go.Figure()
@@ -153,27 +134,16 @@ def figure_nuage_points(df_base_magasins, seuil=0.2, col_y='conso_elec_mwh_par_m
     
     # Setting the y-axis range
     fig.update_xaxes(gridcolor='lightgrey')
-    if mode == 'elec':
-        fig.update_yaxes(range=[0, 1], gridcolor='lightgrey')
-    else:
-        fig.update_yaxes(range=[0, 1.2], gridcolor='lightgrey')
-    
+    fig.update_yaxes(range=[0, 1.2], gridcolor='lightgrey')
     st.plotly_chart(fig)
 
     return
 
-def expander_nuage_points(euros_mwh, tCO2_gwh, mode='elec'):
+def expander_nuage_points(euros_mwh, tCO2_gwh):
 
-    if mode == 'elec':
-
-        with st.expander("Hypothèses"):
-
-            st.write('[1] En suppposant que le magasin arrive à baisser sa consommation au niveau du top 20%, et avec des hypothèses d\'un prix de ' + str(euros_mwh) + '€/MWh électrique et un facteur d\'émission de '  + str(tCO2_gwh) + ' tCO2/GWh électrique.')
-            st.write('[2] Les consommations ont été corrigées pour prendre trois facteurs en considération: 1) la surface commerciale: pour chaque 1000 m² supplémentaire de surface commerciale, la consommation électrique diminue de 0.008 [MWh/m²]; 2) le climat: pour chaque degré de température extérieure moyenne en plus, la consommation électrique augmente de 0.016 [MWh/m²]; 3) l\'ouverture le dimanche: pour les magasins ouverts le dimanche, la consommation électrique augmente en moyenne de 3%.')
-
-    else:
-        with st.expander("Hypothèses"):
-            st.write('[1] En suppposant que le site arrive à baisser sa consommation au niveau du top 20%, et avec des hypothèses d\'un prix de ' + str(euros_mwh) + '€/MWh électrique, 101 €/MWh de gaz, un facteur d\'émission de '  + str(tCO2_gwh) + ' tCO2/GWh électrique et 227 tCO2/GWh pour le gaz. Pour arriver au niveau du top 20%, on suppose que le site baisse sa consommation d\'éléctricité et de gaz dans les mêmes proportions.')
-            st.write('[2] Les consommations ont été corrigées pour prendre trois facteurs en considération: 1) la surface du site: pour chaque 1000 m² supplémentaire de surface, la consommation énergétique diminue de 0.006 [MWh/m²]; 2) le climat: pour chaque degré de température extérieure moyenne en plus, la consommation énergétique augmente de 0.006 [MWh/m²]; 3) l\'ouverture le dimanche: pour les sites ouverts le dimanche, la consommation énergétique augmente en moyenne de 3%.')
+    # Expander
+    with st.expander("Hypothèses"):
+        st.write('[1] En suppposant que le site arrive à baisser sa consommation au niveau du top 20%, et avec des hypothèses d\'un prix de ' + str(euros_mwh) + '€/MWh électrique, 101 €/MWh de gaz, un facteur d\'émission de '  + str(tCO2_gwh) + ' tCO2/GWh électrique et 227 tCO2/GWh pour le gaz. Pour arriver au niveau du top 20%, on suppose que le site baisse sa consommation d\'éléctricité et de gaz dans les mêmes proportions.')
+        st.write('[2] Les consommations ont été corrigées pour prendre trois facteurs en considération: 1) la surface du site: pour chaque 1000 m² supplémentaire de surface, la consommation énergétique diminue de 0.006 [MWh/m²]; 2) le climat: pour chaque degré de température extérieure moyenne en plus, la consommation énergétique augmente de 0.006 [MWh/m²]; 3) l\'ouverture le dimanche: pour les sites ouverts le dimanche, la consommation énergétique augmente en moyenne de 3%.')
 
     return
