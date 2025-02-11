@@ -29,11 +29,51 @@ def plot_conso_hebdo(df_consos_all, df_consos_stats, df_carte_identite, code_pri
     with col2:
         mois_2 = st.selectbox("Selectionner le deuxième mois",(options_mois),index=12, label_visibility='collapsed')
 
+    # Find which month is the first one chronologically. Remember that they are in format 'Janvier 2023', etc
+    if options_mois.index(mois_1) < options_mois.index(mois_2):
+        mois_1, mois_2 = mois_1, mois_2
+    else:
+        mois_1, mois_2 = mois_2, mois_1
 
     # Slice the dataframes to retrieve month 1 and 2
     df_consos_all_month_1 = df_consos_all[((df_consos_all['clean_month'] == mois_1) & (df_consos_all['code'] == code_principal))].copy()
     df_consos_all_month_2 = df_consos_all[((df_consos_all['clean_month'] == mois_2) & (df_consos_all['code'] == code_principal))].copy()
 
+    # Calculate the mean consumption for the two months
+    mean_month_1 = round(df_consos_all_month_1['p_w_m2'].mean(),1)
+    mean_month_2 = round(df_consos_all_month_2['p_w_m2'].mean(),1)
+    percent_change = round(100 * (mean_month_2 - mean_month_1) / mean_month_1,1)
+    if percent_change > 0:
+            percent_change = f"+{percent_change}"
+    
+    # Display some indicators
+    col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([1,4,4,4,1])
+    
+    with col1_1:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Conso moyenne ({mois_1}) <br>
+                    <span style="font-size: 22px; font-weight: bold;">{mean_month_1} W/m²</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_2:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Conso moyenne ({mois_2}) <br>
+                    <span style="font-size: 22px; font-weight: bold;">{mean_month_2} W/m²</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_3:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Variation <br>
+                    <span style="font-size: 22px; font-weight: bold;">{percent_change} %</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+    
+    
     # Add a correction factor to account for the change in the consumption
     pen_factor_mag = df_carte_identite[df_carte_identite['code'] == code_principal]['conso_elec_2023_mwh_par_m2_corrigee'].values[0] / df_carte_identite[df_carte_identite['code'] == code_principal]['conso_elec_2023_mwh_par_m2'].values[0]
 
@@ -48,11 +88,11 @@ def plot_conso_hebdo(df_consos_all, df_consos_stats, df_carte_identite, code_pri
 
     # Define the y limits
     y_max = max(df_consos_all_month_1['p_w_m2'].max(), df_consos_all_month_2['p_w_m2'].max())
-    fig.update_yaxes(range=[0, max(120, 1.1 * y_max)], title='Puissance [W/m²]')
+    fig.update_yaxes(range=[0, max(100, 1.1 * y_max)], title='Puissance [W/m²]')
     
     # Update layout
-    fig.update_layout(title=' ', title_x=0.5, height=550, showlegend=True, margin=dict(l=20, r=20, t=80, b=20),
-                      legend=dict(orientation='h', yanchor="top", y=1.05, xanchor="right", x=0.99), hovermode='x unified')
+    fig.update_layout(title=' ', title_x=0.5, height=550, showlegend=True, margin=dict(l=20, r=20, t=10, b=20),
+                      legend=dict(orientation='h', yanchor="top", y=0.95, xanchor="right", x=0.99), hovermode='x unified')
     
     st.plotly_chart(fig)
 
