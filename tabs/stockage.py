@@ -32,11 +32,11 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
         key='mois_economies_stockage', label_visibility="visible")
         
 
-    # Slice the dataframe to keep only the selected month
-    df_prix_elec_month = df_prix_elec[df_prix_elec['clean_month'] == mois]
+    # Slice the dataframe to keep only 2023
+    df_prix_elec_month = df_prix_elec[df_prix_elec['clean_month'].isin(options_mois)]
 
-    # Slice the conso dataframe to get only the month and the code_principal
-    df_consos_month = df_consos[(df_consos['clean_month'] == mois) & (df_consos['code'] == code_principal)]
+    # Slice the conso dataframe to get only 2023 and the code_principal
+    df_consos_month = df_consos[(df_consos['clean_month'].isin(options_mois)) & (df_consos['code'] == code_principal)]
 
     # Merge the two datagrames on the 'clean_hour' and 'clean_month' columns
     df_consos_prix_merged = df_consos_month.merge(df_prix_elec_month, on=['clean_hour', 'clean_month'], how='left')
@@ -47,8 +47,6 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
     # Calculate the conso_mwh
     df_consos_prix_merged['conso_kwh'] = df_consos_prix_merged['p_w_m2'] * df_consos_prix_merged['surface_com_m2'] * 1e-3
     df_consos_prix_merged.drop(columns=['code', 'p_w_m2'], inplace=True)
-
-
 
 
     # Loading/unloading rate
@@ -90,15 +88,67 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
     # df_consos_prix_merged['conso_from_battery_kwh'] = -df_consos_prix_merged['loading_energy'].clip(upper=0)
     # df_consos_prix_merged['loading_battery'] = df_consos_prix_merged['loading_energy'].clip(lower=0)
     # df_consos_prix_merged['conso_minus_battery'] = df_consos_prix_merged['conso_kwh'] - df_consos_prix_merged['conso_from_battery_kwh']
+    
+    
+    # Mean price of energy charged
+    mean_price_charged = df_consos_prix_merged[df_consos_prix_merged['loading_energy'] > 0]['market_price_eur_mwh'].mean()
+    
+    # Mean price of energy discharged
+    mean_price_discharged = df_consos_prix_merged[df_consos_prix_merged['loading_energy'] < 0]['market_price_eur_mwh'].mean()
+    
+    total_energy_charged_mwh = 0.001 * df_consos_prix_merged['loading_energy'].clip(lower=0).sum()
+    
+    # Calculate the savings
+    total_energy_charged = (df_consos_prix_merged['loading_energy'].clip(lower=0).sum() / 1e3) * (52/12)
+    savings = ((mean_price_discharged - mean_price_charged) * total_energy_charged) / 1e3
+    
+    
+    
+    # Show these indicators
+    col1_0, col1_1, col1_2, col1_3, col1_4 = st.columns([1,4,4,4,4])
+    
+    with col1_1:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Économies potentielles 💰 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(savings)} k€/an</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_2:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Énergie chargée 🌞 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(total_energy_charged)} MWh</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_3:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Prix moyen chargé 📈 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(mean_price_charged, 2)} €/MWh</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    with col1_4:
+        st.markdown(f"""
+                <div style="text-align: center;">
+                    Prix moyen déchargé 📉 <br>
+                    <span style="font-size: 22px; font-weight: bold;">{round(mean_price_discharged, 2)} €/MWh</span><br>
+                </div>
+                """, unsafe_allow_html=True)
+        
 
-
+    # Slice to keep only the selected month
+    df_consos_prix_merged_month = df_consos_prix_merged[df_consos_prix_merged['clean_month'] == mois]
 
     fig = go.Figure()
 
     # Add the dashed line for conso_real_kwh
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['conso_real_kwh'].round(),
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['conso_real_kwh'].round(),
         name='Consommation avec effet batterie [kWh]',
         mode='lines',
         line=dict(color='blue', dash='dash')
@@ -106,8 +156,8 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
 
     # Add the solid line for conso_kwh
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['conso_kwh'].round(),
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['conso_kwh'].round(),
         name='Consommation sans batterie [kWh]',
         mode='lines',
         line=dict(color='blue', dash='solid'),
@@ -116,8 +166,8 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
 
     # Fill the area between conso_kwh and conso_real_kwh with red when conso_real_kwh is above conso_kwh
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['conso_real_pos_kwh'].round(),
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['conso_real_pos_kwh'].round(),
         mode='lines',
         name='Chargement',
         line=dict(color='rgba(0,0,0,0)'),  # Transparent line
@@ -128,8 +178,8 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
 
     # Add the solid line for conso_kwh
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['conso_kwh'].round(),
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['conso_kwh'].round(),
         name='Conso kWh',
         mode='lines',
         line=dict(color='blue', dash='solid'),
@@ -139,8 +189,8 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
 
     # Fill the area between conso_kwh and conso_real_kwh with red when conso_real_kwh is above conso_kwh
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['conso_real_neg_kwh'].round(),
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['conso_real_neg_kwh'].round(),
         mode='lines',
         name='Déchargement',
         line=dict(color='rgba(0,0,0,0)'),  # Transparent line
@@ -151,8 +201,8 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
 
     # Also add a line with the price of the electricity, in a second y-axis
     fig.add_trace(go.Scatter(
-        x=df_consos_prix_merged['clean_hour'],
-        y=df_consos_prix_merged['market_price_eur_mwh'],
+        x=df_consos_prix_merged_month['clean_hour'],
+        y=df_consos_prix_merged_month['market_price_eur_mwh'],
         name='Prix de l\'électricité [€/MWh]',
         mode='lines',
         opacity=0.5,
@@ -171,7 +221,7 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
     height=500,
     hovermode='x unified',
     yaxis=dict(
-        range=[0, 1.1 * max(df_consos_prix_merged['conso_kwh'].max(), df_consos_prix_merged['conso_real_kwh'].max())],
+        range=[0, 1.1 * max(df_consos_prix_merged_month['conso_kwh'].max(), df_consos_prix_merged_month['conso_real_kwh'].max())],
         showgrid=False
     ),
     yaxis2=dict(
@@ -179,7 +229,7 @@ def plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec, code_pri
         overlaying='y',
         side='right',
         showgrid=False,
-        range=[df_consos_prix_merged['market_price_eur_mwh'].min(), 1.5 * df_consos_prix_merged['market_price_eur_mwh'].max()]  # Set the range for the secondary y-axis
+        range=[df_consos_prix_merged_month['market_price_eur_mwh'].min(), 1.5 * df_consos_prix_merged_month['market_price_eur_mwh'].max()]  # Set the range for the secondary y-axis
     )
 )
 
