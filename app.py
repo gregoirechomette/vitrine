@@ -78,18 +78,7 @@ codes_comparatifs = df_carte_identite[df_carte_identite['num_magasin'].isin(maga
 
 
 # Tabs
-# tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec, tab_stockage = st.tabs(["Carte d'identité \u2001\u2001\u2001\u2001", 
-#                                                                                 "Benchmark efficacité \u2001\u2001\u2001\u2001", 
-#                                                                                 "Part du gaz \u2001\u2001\u2001\u2001", 
-#                                                                                 'Benchmark profil de consommation \u2001\u2001\u2001',
-#                                                                                 'Evolution du profil de consommation \u2001\u2001\u2001',
-#                                                                                 'Radar \u2001\u2001\u2001',
-#                                                                                 'Désagregration \u2001\u2001\u2001',
-#                                                                                 'Autoconsommation solaire \u2001\u2001\u2001',
-#                                                                                 'Achat de l\'électricité \u2001\u2001\u2001',
-#                                                                                 'Stockage \u2001\u2001\u2001'])
-
-tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec = st.tabs(["Carte d'identité \u2001\u2001\u2001\u2001", 
+tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec, tab_stockage = st.tabs(["Carte d'identité \u2001\u2001\u2001\u2001", 
                                                                                 "Benchmark efficacité \u2001\u2001\u2001\u2001", 
                                                                                 "Part du gaz \u2001\u2001\u2001\u2001", 
                                                                                 'Benchmark profil de consommation \u2001\u2001\u2001',
@@ -97,7 +86,18 @@ tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_rad
                                                                                 'Radar \u2001\u2001\u2001',
                                                                                 'Désagregration \u2001\u2001\u2001',
                                                                                 'Autoconsommation solaire \u2001\u2001\u2001',
-                                                                                'Achat de l\'électricité \u2001\u2001\u2001'])
+                                                                                'Achat de l\'électricité \u2001\u2001\u2001',
+                                                                                'Stockage \u2001\u2001\u2001'])
+
+# tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec = st.tabs(["Carte d'identité \u2001\u2001\u2001\u2001", 
+#                                                                                 "Benchmark efficacité \u2001\u2001\u2001\u2001", 
+#                                                                                 "Part du gaz \u2001\u2001\u2001\u2001", 
+#                                                                                 'Benchmark profil de consommation \u2001\u2001\u2001',
+#                                                                                 'Evolution du profil de consommation \u2001\u2001\u2001',
+#                                                                                 'Radar \u2001\u2001\u2001',
+#                                                                                 'Désagregration \u2001\u2001\u2001',
+#                                                                                 'Autoconsommation solaire \u2001\u2001\u2001',
+#                                                                                 'Achat de l\'électricité \u2001\u2001\u2001'])
 
 with tab_id:
     resume.resume(df_carte_identite, magasin_principal, magasins_comparatifs)    
@@ -132,8 +132,8 @@ with tab_pv:
 with tab_prix_elec:
     prix_electricite.plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal=code_principal)
 
-# with tab_stockage:
-#     stockage.plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec,code_principal=code_principal)
+with tab_stockage:
+    stockage.plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec,code_principal=code_principal)
 
 
 # # Footer
