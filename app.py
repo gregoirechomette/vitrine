@@ -66,6 +66,10 @@ df_prix_elec = pd.read_csv('./data/prix_marche_elec_2023.csv')
 st.markdown("""<style>.css-o18uir.e16nr0p33 {margin-top: -275px;}</style>""", unsafe_allow_html=True)
 st.sidebar.image('./pictures/aice.png')
 
+st.sidebar.title(" ")
+mode_groupe = st.sidebar.toggle("Niveau global", key="carte_identite")
+
+
 # Selection du magasin principal
 st.sidebar.title("Mon site")
 magasin_principal = st.sidebar.selectbox("Choisir un magasin", df_carte_identite['num_magasin'].to_list(), label_visibility="collapsed")
@@ -78,10 +82,10 @@ codes_comparatifs = df_carte_identite[df_carte_identite['num_magasin'].isin(maga
 
 
 # Tabs
-tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec, tab_stockage = st.tabs(["Carte d'identité \u2001\u2001\u2001\u2001", 
+tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_radar, tab_desag, tab_pv, tab_prix_elec, tab_stockage = st.tabs(["Vision d\'ensemble \u2001\u2001\u2001\u2001", 
                                                                                 "Benchmark efficacité \u2001\u2001\u2001\u2001", 
                                                                                 "Part du gaz \u2001\u2001\u2001\u2001", 
-                                                                                'Benchmark profil de consommation \u2001\u2001\u2001',
+                                                                                'Profil de consommation \u2001\u2001\u2001',
                                                                                 'Evolution du profil de consommation \u2001\u2001\u2001',
                                                                                 'Radar \u2001\u2001\u2001',
                                                                                 'Désagregration \u2001\u2001\u2001',
@@ -100,22 +104,27 @@ tab_id, tab_nuage, tab_nuage_gaz, tab_conso_hebdo, tab_conso_hebdo_past, tab_rad
 #                                                                                 'Achat de l\'électricité \u2001\u2001\u2001'])
 
 with tab_id:
-    resume.resume(df_carte_identite, magasin_principal, magasins_comparatifs)    
+    resume.resume(df_carte_identite, magasin_principal, magasins_comparatifs, mode_groupe)    
 
 with tab_nuage:
     st.text("")
     euros_par_mwh = 180; tC02_par_gwh = 32
-    nuage_points.big_numbers_nuage_points(df_carte_identite, code_principal=code_principal)
-    nuage_points.figure_nuage_points(df_carte_identite, seuil=0.2, col_y='conso_elec_mwh_par_m2_corrigee', code_principal=code_principal, codes_comparatifs=codes_comparatifs)
-    nuage_points.expander_nuage_points(euros_par_mwh, tC02_par_gwh)
+    nuage_points.wrapper_efficacite_energetique(df_carte_identite, code_principal=code_principal, codes_comparatifs=codes_comparatifs, mode_groupe=mode_groupe, euros_mwh=euros_par_mwh, tCO2_gwh=tC02_par_gwh)
+    
+    # nuage_points.big_numbers_nuage_points(df_carte_identite, code_principal=code_principal)
+    # nuage_points.figure_nuage_points(df_carte_identite, seuil=0.2, col_y='conso_elec_mwh_par_m2_corrigee', code_principal=code_principal, codes_comparatifs=codes_comparatifs)
+    # nuage_points.expander_nuage_points(euros_par_mwh, tC02_par_gwh)
 
 with tab_nuage_gaz:
     st.text("")
-    nuage_points_gaz.big_numbers_nuage_points(df_carte_identite, code_principal=code_principal)
-    nuage_points_gaz.figure_nuage_points(df_carte_identite, seuil=0.2, code_principal=code_principal, codes_comparatifs=codes_comparatifs)
+    
+    nuage_points_gaz.wrapper_nuage_points_gaz(df_carte_identite, seuil=0.2, code_principal=code_principal, codes_comparatifs=codes_comparatifs, mode_groupe=mode_groupe)
+    # nuage_points_gaz.big_numbers_nuage_points(df_carte_identite, code_principal=code_principal)
+    # nuage_points_gaz.figure_nuage_points(df_carte_identite, seuil=0.2, code_principal=code_principal, codes_comparatifs=codes_comparatifs)
 
 with tab_conso_hebdo:
-    conso_hebdo.plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0])
+    conso_hebdo.wrapper_plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0], mode_groupe=mode_groupe)
+    # conso_hebdo.plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0])
 
 with tab_conso_hebdo_past:
     conso_hebdo_past.plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0])
