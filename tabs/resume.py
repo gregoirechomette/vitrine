@@ -90,7 +90,7 @@ def resume_mode_magasin(df_base, magasin_principal, magasins_comparatifs):
         # Set the size of colorticks
         colorbar_fontsize = 7.5
         cb.ax.tick_params(labelsize=colorbar_fontsize)
-        cb.set_label("Consommation corrigée [MWh/m²]", fontsize=colorbar_fontsize)
+        cb.set_label("Consommation corrigée [MWh/m²/an]", fontsize=colorbar_fontsize)
         cb.ax.xaxis.set_tick_params(width=0.3)
         
         st.pyplot(fig)
@@ -132,13 +132,13 @@ def resume_mode_groupe(df_base):
     
     
     # Create a colorbar
-    fig, ax = plt.subplots(figsize=(5, 0.03))  # Tall and narrow figure for vertical colorbar
+    fig, ax = plt.subplots(figsize=(20, 0.18))  # Tall and narrow figure for vertical colorbar
     cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, orientation="horizontal")
 
     # Set the size of colorticks
-    colorbar_fontsize = 4.5
+    colorbar_fontsize = 14
     cb.ax.tick_params(labelsize=colorbar_fontsize)
-    cb.set_label("Consommation corrigée [MWh/m²]", fontsize=colorbar_fontsize, labelpad=10)
+    cb.set_label("Consommation corrigée [MWh/m²/an]", fontsize=colorbar_fontsize, labelpad=10)
     cb.ax.yaxis.set_label_position("right")
     cb.ax.yaxis.label.set_rotation(0)  # Rotate the label text
 
