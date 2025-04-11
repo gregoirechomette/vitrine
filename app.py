@@ -127,13 +127,13 @@ with tab_conso_hebdo:
     # conso_hebdo.plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0])
 
 with tab_conso_hebdo_past:
-    conso_hebdo_past.plot_conso_hebdo(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal, magasins_comparatifs=codes_comparatifs, dimanche_ouvert=df_carte_identite[df_carte_identite['code'] == code_principal]['dimanche_ouvert'].values[0])
+    conso_hebdo_past.wrapper_plot_conso_hebdo(df_consos, df_carte_identite, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_radar:
-    radar.plot_radar(df_radar, df_carte_identite, code_principal=code_principal)
+    radar.plot_radar(df_radar, df_carte_identite, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_desag:
-    desagregation.desagregation_cdc(df_consos, df_consos_stats, df_carte_identite, code_principal=code_principal)
+    desagregation.wrapper_desagregation_cdc(df_consos, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_pv:
     pv.plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal=code_principal)
