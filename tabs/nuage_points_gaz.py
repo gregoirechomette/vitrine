@@ -18,10 +18,12 @@ def wrapper_nuage_points_gaz(df_base_magasins, code_principal='0104', codes_comp
     if mode_groupe:
         big_numbers_nuage_points_gaz_groupe(df_base_magasins)
         figure_nuage_points_gaz_groupe(df_base_magasins)
+        expander_nuage_points_gaz_magasin()
     
     else:   
         big_numbers_nuage_points_gaz_magasin(df_base_magasins, code_principal)
         figure_nuage_points_gaz_magasin(df_base_magasins, seuil, code_principal, codes_comparatifs)
+        expander_nuage_points_gaz_magasin()
 
     return
 
@@ -59,7 +61,7 @@ def big_numbers_nuage_points_gaz_magasin(df_base_magasins, code_principal='0104'
     with col1_3:
         st.markdown(f"""
                 <div style="text-align: center;">
-                    Émissions liées au gaz 🌍  <br>
+                    Émissions liées au gaz 🌍 [1] <br>
                     <span style="font-size: 22px; font-weight: bold;">{emmissions_gaz} tCO2</span><br>
                 </div>
                 """, unsafe_allow_html=True)
@@ -79,7 +81,7 @@ def big_numbers_nuage_points_gaz_groupe(df_base_magasins):
     # Retrieve the important values
     fraction_gaz = round(df_base_magasins['gaz_fraction'].mean())
     conso_gaz_gwh = round(0.001 * df_base_magasins['conso_gaz_2023_mwh'].sum())
-    emmissions_gaz_kt_CO2 = round(0.000001 * 227 * df_base_magasins['conso_gaz_2023_mwh'].sum())
+    emmissions_gaz_t_CO2 = round(0.001 * 227 * df_base_magasins['conso_gaz_2023_mwh'].sum())
     
     # Show some indicators
     with col1_1:
@@ -87,7 +89,7 @@ def big_numbers_nuage_points_gaz_groupe(df_base_magasins):
                 <div style="text-align: center;">
                     Fraction de gaz (🛢️ vs ⚡) <br>
                     <span style="font-size: 22px; font-weight: bold;">{fraction_gaz} %</span><br>
-                    <span style="font-size: 14px; color: gray;">Moyenne</span>
+                    <span style="font-size: 14px; color: gray;">(moyenne)</span>
                 </div>
                 """, unsafe_allow_html=True)
         
@@ -96,16 +98,16 @@ def big_numbers_nuage_points_gaz_groupe(df_base_magasins):
                 <div style="text-align: center;">
                     Consommation de gaz 🔥 <br>
                     <span style="font-size: 22px; font-weight: bold;">{conso_gaz_gwh} GWh</span><br>
-                    <span style="font-size: 14px; color: gray;">Total</span>
+                    <span style="font-size: 14px; color: gray;">(total)</span>
                 </div>
                 """, unsafe_allow_html=True)
         
     with col1_3:
         st.markdown(f"""
                 <div style="text-align: center;">
-                    Émissions liées au gaz 🌍  <br>
-                    <span style="font-size: 22px; font-weight: bold;">{emmissions_gaz_kt_CO2} ktCO2</span><br>
-                    <span style="font-size: 14px; color: gray;">Total</span>
+                    Émissions liées au gaz 🌍 [1] <br>
+                    <span style="font-size: 22px; font-weight: bold;">{emmissions_gaz_t_CO2} tCO2</span><br>
+                    <span style="font-size: 14px; color: gray;">(total)</span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -123,8 +125,8 @@ def figure_nuage_points_gaz_magasin(df_base_magasins, seuil=0.2, code_principal=
     fig = go.Figure()
     
     # Add horizontal lines for the quantile and mean
-    fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].quantile(seuil), line_dash='dash', line_color='grey',
-                  annotation_text=f'Limite top 20%: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].quantile(seuil), 1)} %', annotation_position='top right')
+    # fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].quantile(seuil), line_dash='dash', line_color='grey',
+    #               annotation_text=f'Limite top 20%: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].quantile(seuil), 1)} %', annotation_position='top right')
     fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].mean(), line_dash='dash', line_color='grey',
                   annotation_text=f'Moyenne: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].mean(), 1)} %', annotation_position='top right')
     
@@ -230,8 +232,8 @@ def figure_nuage_points_gaz_groupe(df_base_magasins):
     fig = go.Figure()
     
     # Add horizontal lines for the quantile and mean
-    fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].quantile(0.2), line_dash='dash', line_color='grey',
-                  annotation_text=f'Limite top 20%: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].quantile(0.2), 1)} %', annotation_position='top right')
+    # fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].quantile(0.2), line_dash='dash', line_color='grey',
+    #               annotation_text=f'Limite top 20%: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].quantile(0.2), 1)} %', annotation_position='top right')
     fig.add_hline(y=df_base_magasins[df_base_magasins['pv'] == 'Non'][col_y].mean(), line_dash='dash', line_color='grey',
                   annotation_text=f'Moyenne: {round(df_base_magasins[df_base_magasins["pv"] == "Non"][col_y].mean(), 1)} %', annotation_position='top right')   
     
@@ -274,4 +276,12 @@ def figure_nuage_points_gaz_groupe(df_base_magasins):
     fig.update_yaxes(range=[-5, 55], gridcolor='lightgrey')
     st.plotly_chart(fig)
     
+    return
+
+
+def expander_nuage_points_gaz_magasin():
+
+    # Expander
+    with st.expander("Hypothèses"):
+        st.write('[1] La carbonation du gaz est fixée à 227 tCO2/GWh (ADEME)')
     return

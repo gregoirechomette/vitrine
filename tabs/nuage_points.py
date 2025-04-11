@@ -75,7 +75,7 @@ def big_numbers_nuage_points_magasin(df_base_magasins, code_principal='0104'):
     return
 
 def big_numbers_nuage_points_groupe(df_base_magasins):
-    st.markdown("<p style='text-align: center;'>  Évaluation des économies potentielles à l'échelle du groupe, en supposant que tous les sites arrivent à atteindre le niveau du top 15%, avec des prix et carbonations de l\'énergie de 180 €/MWh et 32 tCO2/GWh respectivement </p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>  Évaluation des économies potentielles à l'échelle du groupe, en supposant que tous les sites arrivent à atteindre le niveau du top 20%. Les prix utilisés pour obtenir l'évaluation des économies potentielles sont pour chaque site un pro-rata du prix de l'énergie (180 €/MWh pour l'éléctricité et 101 €/MWh pour le gaz), et un raisonnement similaire pour les émissions (32 tCO2/GWh pour l'éléctricité et 227 tCO2/GWh pour le gaz) </p>", unsafe_allow_html=True)
     st.text("")
 
     
@@ -84,13 +84,13 @@ def big_numbers_nuage_points_groupe(df_base_magasins):
     # Retrieve the important values
     potentiel_economies_gwh = round(0.001 * df_base_magasins['potentiel_economies_mwh_energie'].sum())
     potentiel_economies_Meuros = round(0.001 * df_base_magasins['potentiel_economies_keuros_energie'].sum())
-    potentiel_economies_ktCO2 = round(0.001 * df_base_magasins['potentiel_economies_tC02_energie'].sum())
+    potentiel_economies_tCO2 = round(df_base_magasins['potentiel_economies_tC02_energie'].sum())
     percent_value = round(-100 * df_base_magasins['potentiel_economies_mwh_energie'].sum() / df_base_magasins['conso_energie_2023_mwh'].sum())
     
     with col1_1:
         st.markdown(f"""
                 <div style="text-align: center;">
-                    Économies potentielles ⚡ [1] <br>
+                    Économies potentielles ⚡  <br>
                     <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_gwh} GWh/an</span><br>
                     <span style="font-size: 14px; color: gray;">{percent_value} %</span>
                 </div>
@@ -99,7 +99,7 @@ def big_numbers_nuage_points_groupe(df_base_magasins):
     with col1_2:
         st.markdown(f"""
                 <div style="text-align: center;">
-                    Économies potentielles 💰 [1] <br>
+                    Économies potentielles 💰  <br>
                     <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_Meuros} M€/an</span><br>
                     <span style="font-size: 14px; color:
                     gray;">{percent_value} %</span>         
@@ -108,8 +108,8 @@ def big_numbers_nuage_points_groupe(df_base_magasins):
     with col1_3:
         st.markdown(f"""
                 <div style="text-align: center;">
-                    Économies potentielles 🌍 [1] <br>
-                    <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_ktCO2} ktCO2/an</span><br>
+                    Économies potentielles 🌍  <br>
+                    <span style="font-size: 22px; font-weight: bold;">{potentiel_economies_tCO2} tCO2/an</span><br>
                     <span style="font-size: 14px; color: gray;">{percent_value} %</span>
                 </div>
                 """, unsafe_allow_html=True)
