@@ -4,9 +4,6 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-import folium
-from streamlit_folium import st_folium
-
 import sys
 sys.path.append('./tabs')
 import resume, nuage_points, nuage_points_gaz, conso_hebdo, conso_hebdo_past, radar, desagregation, pv, prix_electricite, stockage
@@ -145,7 +142,7 @@ with tab_stockage:
     stockage.plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec,code_principal=code_principal, mode_groupe=mode_groupe)
 
 
-# # Footer
+# # Footerg
 # col_innosolaire_txt, col_innosolaire_logo = st.columns([1, 1])
 # with col_innosolaire_txt:
 #     st.text("")

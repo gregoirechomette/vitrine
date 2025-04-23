@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import folium
-from streamlit_folium import st_folium
 
 import plotly
 import streamlit as st
