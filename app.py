@@ -59,7 +59,7 @@ df_consos = data_loading.load_consos_data('./data/consos_monthly_avg_anonymous.c
 df_consos_stats = data_loading.load_consos_stats('./data/consos_monthly_avg_stats_anonymous.csv')
 df_radar = data_loading.load_consos_data('./data/consos_radar_anonymous.csv')
 df_solar = pd.read_csv('./data/solar_prod.csv')
-df_prix_elec = pd.read_csv('./data/prix_marche_elec_2023.csv')
+df_prix_elec = pd.read_csv('./data/prix_marche_elec.csv')
 
 
 # Sidebar
@@ -136,13 +136,13 @@ with tab_desag:
     desagregation.wrapper_desagregation_cdc(df_consos, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_pv:
-    pv.plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal=code_principal)
+    pv.wrapper_plot_pv_forecast(df_consos, df_carte_identite, df_solar, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_prix_elec:
-    prix_electricite.plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal=code_principal)
+    prix_electricite.plot_prix_elec(df_consos, df_carte_identite, df_prix_elec, code_principal=code_principal, mode_groupe=mode_groupe)
 
 with tab_stockage:
-    stockage.plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec,code_principal=code_principal)
+    stockage.plot_economies_stockage(df_consos, df_carte_identite, df_prix_elec,code_principal=code_principal, mode_groupe=mode_groupe)
 
 
 # # Footer
