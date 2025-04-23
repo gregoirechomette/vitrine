@@ -1,5 +1,4 @@
 matplotlib
 plotly
 streamlit
-streamlit-folium
 urllib3==1.26.6
